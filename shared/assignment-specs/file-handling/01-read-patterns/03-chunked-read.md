@@ -54,6 +54,8 @@ process(buf)
 
 ## Explore First
 
+### Go
+
 ก่อนเขียน code ให้เปิด stdlib แล้วตอบคำถามเหล่านี้ก่อน (ห้ามดู example — ดูได้แค่ godoc / go to definition)
 
 - hint: `io.ReadFull()` — signature คืออะไร? ต่างจาก `Read()` ยังไง? return `ErrUnexpectedEOF` เมื่อไหร่?
@@ -61,6 +63,26 @@ process(buf)
 - hint: `(*os.File).Read()` — ถ้า return `n < len(buf)` แต่ `err == nil` หมายความว่าอะไร?
 - `io.EOF` กับ `io.ErrUnexpectedEOF` ต่างกันยังไง? แต่ละอันเกิดเมื่อไหร่?
 - ถ้าต้องอ่านให้ครบ N bytes แน่ๆ โดยไม่ใช้ `io.ReadFull` จะต้อง loop ยังไง?
+
+### Rust
+
+ก่อนเขียน code ให้เปิด stdlib แล้วตอบคำถามเหล่านี้ก่อน (ห้ามดู example — ดูได้แค่ official docs / go to definition)
+
+- hint: `std::io::Read::read()` — return type คืออะไร? `Ok(0)` หมายความว่าอะไร?
+- hint: `read_exact()` — ต่างจาก `read()` ยังไง? error `UnexpectedEof` เกิดเมื่อไหร่?
+- hint: `std::io::Read::read_to_end()` — ทำงานยังไง? เหมาะกับ use case ไหน?
+- Rust มี `io::copy()` — ทำงานยังไง? buffer ขนาดเท่าไหร่?
+- ถ้า `read()` return `Ok(n)` ที่ n < buf.len() แต่ไม่ใช่ 0 — ควรทำอะไร?
+
+### Zig
+
+ก่อนเขียน code ให้เปิด stdlib แล้วตอบคำถามเหล่านี้ก่อน (ห้ามดู example — ดูได้แค่ official docs / go to definition)
+
+- hint: `file.read()` — return type คืออะไร? `0` หมายความว่าอะไร?
+- hint: `file.readAll()` — ต่างจาก `read()` ยังไง? เหมาะกับ use case ไหน?
+- hint: `file.reader().readAll()` vs `file.readAll()` — ต่างกันยังไง?
+- ถ้าต้องการ read exact N bytes ใน Zig ต้องเขียน loop เองยังไง?
+- `error.EndOfStream` กับ `error.InputOutput` ต่างกันยังไง?
 
 ## Task
 

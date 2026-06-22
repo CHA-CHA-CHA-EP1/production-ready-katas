@@ -55,6 +55,8 @@ logrotate เปลี่ยน path ที่ชี้ไป inode แต่ fd
 
 ## Explore First
 
+### Go
+
 ก่อนเขียน code ให้เปิด stdlib แล้วตอบคำถามเหล่านี้ก่อน (ห้ามดู example — ดูได้แค่ godoc / go to definition)
 
 - hint: `(*os.File).Stat()` — return type มี field อะไรที่ identify ไฟล์ได้โดยไม่ใช้ path?
@@ -62,6 +64,26 @@ logrotate เปลี่ยน path ที่ชี้ไป inode แต่ fd
 - hint: `syscall.Stat_t` — field `Ino` คืออะไร? ใช้เปรียบ inode ได้ยังไง?
 - inode คืออะไร? ทำไม rename ไม่เปลี่ยน inode แต่เปลี่ยน path ได้?
 - `inotify(7)` บน Linux watch event อะไรได้บ้าง? `IN_MOVE_SELF`, `IN_CREATE` ต่างกันยังไง?
+
+### Rust
+
+ก่อนเขียน code ให้เปิด official docs แล้วตอบคำถามเหล่านี้ก่อน (ห้ามดู example — ดูได้แค่ official docs / go to definition)
+
+- hint: `std::fs::metadata()` vs `file.metadata()` — ต่างกันยังไงตอน file rotation?
+- hint: `std::os::unix::fs::MetadataExt` — มี method อะไรที่ได้ inode number?
+- hint: `inotify` crate หรือ `notify` crate — ใช้ watch file system events บน Linux ยังไง?
+- Rust `std::fs::File` ผูกกับ inode หรือ path? หลัง rename file handle ยังใช้ได้ไหม?
+- `IN_MOVE_SELF` event ใน inotify คืออะไร? ต่างจาก `IN_DELETE` ยังไง?
+
+### Zig
+
+ก่อนเขียน code ให้เปิด official docs แล้วตอบคำถามเหล่านี้ก่อน (ห้ามดู example — ดูได้แค่ official docs / go to definition)
+
+- hint: `std.os.fstat()` — return type คืออะไร? field `ino` คืออะไร?
+- hint: `std.os.inotify_init1()` และ `std.os.inotify_add_watch()` — ใช้ยังไง?
+- `std.os.linux.IN` constants — `IN_MOVE_SELF`, `IN_CREATE` ต่างกันยังไง?
+- Zig ไม่มี high-level file watcher — ต้องเรียก Linux syscall โดยตรงยังไง?
+- inode ใน Linux เก็บอยู่ใน `std.os.Stat` field ไหน?
 
 ## Task
 

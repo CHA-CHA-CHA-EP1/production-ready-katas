@@ -53,6 +53,8 @@ Checkpoint ที่ดีต้องการ atomicity (เขียนสำ
 
 ## Explore First
 
+### Go
+
 ก่อนเขียน code ให้เปิด stdlib แล้วตอบคำถามเหล่านี้ก่อน (ห้ามดู example — ดูได้แค่ godoc / go to definition)
 
 - hint: `(*os.File).Sync()` — ทำอะไร? ต่างจาก `Close()` ยังไง? ต้องเรียกเมื่อไหร่?
@@ -60,6 +62,26 @@ Checkpoint ที่ดีต้องการ atomicity (เขียนสำ
 - hint: `os.CreateTemp()` — ใช้สร้าง temp file สำหรับ atomic write ยังไง?
 - ถ้า checkpoint และ data file อยู่ต่าง filesystem กัน `os.Rename` ยังใช้ได้ไหม?
 - "at-least-once" vs "exactly-once" delivery ต่างกันยังไง? checkpoint ช่วย guarantee อะไรได้บ้าง?
+
+### Rust
+
+ก่อนเขียน code ให้เปิด official docs แล้วตอบคำถามเหล่านี้ก่อน (ห้ามดู example — ดูได้แค่ official docs / go to definition)
+
+- hint: `std::fs::File::sync_all()` — ทำอะไร? ต่างจาก `sync_data()` ยังไง? เรียกเมื่อไหร่?
+- hint: `std::fs::rename()` — atomic บน POSIX ไหม? ข้อจำกัดข้าม filesystem คืออะไร?
+- hint: `tempfile` crate (หรือ `NamedTempFile`) — ใช้สร้าง temp file สำหรับ atomic write ยังไง?
+- Rust ไม่มี `defer` — จะ ensure file ถูก close + sync ทุก code path ยังไง? `Drop` ช่วยได้ไหม?
+- "at-least-once" delivery หมายความว่าอะไรในบริบทของ checkpoint? เขียน checkpoint ก่อนหรือหลัง process?
+
+### Zig
+
+ก่อนเขียน code ให้เปิด official docs แล้วตอบคำถามเหล่านี้ก่อน (ห้ามดู example — ดูได้แค่ official docs / go to definition)
+
+- hint: `file.sync()` — ทำอะไร? เรียก fsync(2) ไหม?
+- hint: `std.fs.rename()` — signature คืออะไร? ทำไม atomic บน POSIX?
+- hint: `std.fs.Dir.createFile()` กับ `std.fs.AtomicFile` — ต่างกันยังไง?
+- Zig มี `std.fs.AtomicFile` — ใช้ทำ atomic write ยังไง? `.finish()` ทำอะไร?
+- error handling: ถ้า `finish()` fail หลัง write แล้ว temp file จะถูก cleanup ไหม?
 
 ## Task
 

@@ -50,6 +50,8 @@ return lines[max(0, len(lines)-n):]
 
 ## Explore First
 
+### Go
+
 ก่อนเขียน code ให้เปิด stdlib แล้วตอบคำถามเหล่านี้ก่อน (ห้ามดู example — ดูได้แค่ godoc / go to definition)
 
 - hint: `(*os.File).Seek()` — signature คืออะไร? parameter `whence` มีค่าอะไรได้บ้าง?
@@ -57,6 +59,26 @@ return lines[max(0, len(lines)-n):]
 - hint: `(*os.File).Stat()` — ใช้หา file size ได้ยังไง? ก่อน seek ต้องรู้อะไร?
 - ถ้า file size 1000 bytes และ seek ไป offset -100 จาก end จะอยู่ที่ byte ไหน?
 - การ scan backward หา `\n` — ต้องอ่าน buffer ขนาดเท่าไหร่ต่อครั้ง? trade-off คืออะไร?
+
+### Rust
+
+ก่อนเขียน code ให้เปิด stdlib แล้วตอบคำถามเหล่านี้ก่อน (ห้ามดู example — ดูได้แค่ official docs / go to definition)
+
+- hint: `std::io::Seek::seek()` — รับ argument `SeekFrom` enum มีค่าอะไรบ้าง?
+- hint: `SeekFrom::End()` — รับ argument `i64` ทำไม? negative value หมายความว่าอะไร?
+- hint: `file.metadata().len()` — ใช้รู้ file size ก่อน seek ได้ยังไง?
+- Rust มี `rev()` บน iterator — จะใช้กับ byte buffer backward traversal ยังไง?
+- `BufReader` หลัง `seek()` — internal buffer ยัง valid ไหม? ต้องทำอะไรก่อน seek?
+
+### Zig
+
+ก่อนเขียน code ให้เปิด stdlib แล้วตอบคำถามเหล่านี้ก่อน (ห้ามดู example — ดูได้แค่ official docs / go to definition)
+
+- hint: `file.seekFromEnd()` — รับ argument อะไร? negative value หมายความว่าอะไร?
+- hint: `file.seekTo()` vs `file.seekBy()` vs `file.seekFromEnd()` — แต่ละอันต่างกันยังไง?
+- hint: `file.getEndPos()` — ใช้ทำอะไร? ต่างจาก `stat().size` ยังไง?
+- backward scan หา `\n` ใน Zig — ต้องอ่าน buffer ยังไง? `std.mem.lastIndexOfScalar` ช่วยได้ไหม?
+- Zig allocator pattern: backward scan ที่ต้อง collect lines — ใช้ `ArrayList` ยังไง?
 
 ## Task
 

@@ -49,6 +49,8 @@ chunk := data[1000000 : 1000000+size]
 
 ## Explore First
 
+### Go
+
 ก่อนเขียน code ให้เปิด stdlib แล้วตอบคำถามเหล่านี้ก่อน (ห้ามดู example — ดูได้แค่ godoc / go to definition)
 
 - hint: `(*os.File).ReadAt()` — signature คืออะไร? ต่างจาก `Seek + Read` ยังไง?
@@ -56,6 +58,26 @@ chunk := data[1000000 : 1000000+size]
 - hint: `(*os.File).Seek()` — หลัง `Seek` แล้ว concurrent goroutine เรียก `Seek` อีกจะเกิดอะไร?
 - `ReadAt` เรียกพร้อมกันหลาย goroutine ปลอดภัยไหม? ทำไม?
 - ถ้า offset + length เกินขนาดไฟล์ `ReadAt` จะ return อะไร?
+
+### Rust
+
+ก่อนเขียน code ให้เปิด stdlib แล้วตอบคำถามเหล่านี้ก่อน (ห้ามดู example — ดูได้แค่ official docs / go to definition)
+
+- hint: `std::os::unix::fs::FileExt::read_at()` — ต่างจาก `seek + read` ยังไง? thread-safe ไหม?
+- hint: `std::io::SeekFrom` — มี variant อะไรบ้าง? แต่ละอันใช้เมื่อไหร่?
+- `pread(2)` syscall กับ `read_at()` ใน Rust สัมพันธ์กันยังไง?
+- Windows ไม่มี `read_at` เหมือน Unix — Rust handle cross-platform ยังไง?
+- `Seek + Read` ไม่ atomic บน multi-thread — `read_at` แก้ปัญหานี้ยังไง?
+
+### Zig
+
+ก่อนเขียน code ให้เปิด stdlib แล้วตอบคำถามเหล่านี้ก่อน (ห้ามดู example — ดูได้แค่ official docs / go to definition)
+
+- hint: `file.pread()` — signature คืออะไร? ต่างจาก `seek + read` ยังไง?
+- hint: `file.preadAll()` — ต่างจาก `pread()` ยังไง?
+- `pread` บน Linux คือ syscall `pread64(2)` — Zig map ยังไง?
+- Zig standard library มี `File.Reader` และ `File.SeekableStream` — interface นี้คืออะไร?
+- ถ้า offset + size เกินขนาดไฟล์ `pread` จะ return อะไร?
 
 ## Task
 

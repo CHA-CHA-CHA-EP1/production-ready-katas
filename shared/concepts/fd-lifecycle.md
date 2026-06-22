@@ -30,6 +30,7 @@ open(path) ──► kernel allocates fd ──► read/write ──► close(fd
 
 **FD leak** เกิดเมื่อโปรแกรมเปิดไฟล์แล้ว **ไม่ close** ทุก code path — โดยเฉพาะ error path
 
+**Go:**
 ```go
 // leak: ถ้า process() return error ก่อน, f.Close() ไม่ถูกเรียก
 f, _ := os.Open(path)
@@ -38,6 +39,33 @@ if err != nil {
     return err  // ← fd รั่วตรงนี้
 }
 f.Close()
+```
+
+**Rust (leak ไม่เกิด เพราะ Drop):**
+```rust
+// Rust: fd leak ไม่เกิดแบบนี้ — Drop จัดการให้เสมอ
+// แต่ leak ยังเกิดได้ถ้าใช้ ManuallyDrop หรือ mem::forget
+let f = std::fs::File::open(path)?;
+let data = process(&f);
+if data.is_err() {
+    return Err(data.unwrap_err()); // f ยัง drop ที่นี่ — fd ถูกปิด
+}
+// f drop ที่นี่เช่นกัน
+```
+
+**Zig (leak ถ้าไม่ใช้ defer):**
+```zig
+// ❌ leak เหมือน Go ถ้าไม่ใช้ defer
+const f = try std.fs.cwd().openFile(path, .{});
+const data = process(f) catch |err| {
+    return err; // fd รั่วตรงนี้ถ้าไม่มี defer
+};
+f.close();
+
+// ✅ ถูกต้อง
+const f = try std.fs.cwd().openFile(path, .{});
+defer f.close();
+const data = try process(f);
 ```
 
 **ผลลัพธ์:**
@@ -50,8 +78,9 @@ f.Close()
 - Traffic น้อย → ไม่ถึง limit
 - โชว์ใน production ที่ process อยู่นาน + traffic สูง
 
-## วิธีแก้ใน Go: `defer`
+## วิธีจัดการ FD ในแต่ละภาษา
 
+**Go:**
 ```go
 f, err := os.Open(path)
 if err != nil {
@@ -63,6 +92,32 @@ defer f.Close()  // ← ปิดแน่นอน ไม่ว่า code path
 ```
 
 `defer` รัน **ก่อน function return เสมอ** ไม่ว่าจะ return ปกติหรือ return error
+
+**Rust:**
+```rust
+// Rust ใช้ Drop trait — File ถูก close อัตโนมัติเมื่อออกนอก scope
+// ไม่ต้องเรียก close() เอง — compiler บังคับ
+fn read_config(path: &str) -> std::io::Result<Vec<u8>> {
+    let mut f = std::fs::File::open(path)?; // เปิด
+    let mut buf = Vec::new();
+    f.read_to_end(&mut buf)?;              // อ่าน
+    Ok(buf)
+    // f ถูก drop ตรงนี้ → close() ถูกเรียกอัตโนมัติ ทุก code path
+}
+```
+
+**Zig:**
+```zig
+fn readConfig(allocator: std.mem.Allocator, path: []const u8) ![]u8 {
+    const f = try std.fs.cwd().openFile(path, .{});
+    defer f.close(); // เหมือน Go's defer — รันก่อน return ทุก path
+
+    const stat = try f.stat();
+    const buf = try allocator.alloc(u8, stat.size);
+    _ = try f.readAll(buf);
+    return buf;
+}
+```
 
 ## ตรวจสอบ FD ที่เปิดอยู่
 

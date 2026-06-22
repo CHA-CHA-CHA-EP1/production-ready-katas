@@ -48,10 +48,11 @@ data, err := io.ReadAll(f)
 - ผู้ใช้ส่ง path มาเอง (user input) — อาจเป็นไฟล์ใหญ่ได้เสมอ
 - ไฟล์ที่เคยเล็กโตขึ้นเรื่อยๆ ตามเวลา
 
-## `[]byte` Slice ใน Go
+## Dynamic Buffer ในแต่ละภาษา
 
 `os.ReadFile` คืน `[]byte` ซึ่งเป็น slice:
 
+**Go:**
 ```
 []byte header (24 bytes)        heap memory
 ┌──────────────────────┐       ┌─────────────────────────┐
@@ -67,6 +68,28 @@ data, err := io.ReadAll(f)
 
 **Garbage Collection:** Go GC จะคืน memory นี้ให้อัตโนมัติ เมื่อไม่มีอะไร reference slice นั้นอีกแล้ว
 แต่ถ้า slice ถูก pass ไปเก็บไว้ใน struct หรือ global variable GC จะยังไม่เก็บ
+
+**Rust:**
+```rust
+// Vec<u8> — heap-allocated, growable buffer
+let data: Vec<u8> = std::fs::read(path)?;
+// Vec header: ptr + len + capacity (24 bytes on 64-bit)
+// backing array อยู่บน heap เหมือนกัน
+// Drop จัดการ free memory อัตโนมัติ — ไม่ต้องการ GC
+```
+
+**Zig:**
+```zig
+// Zig ต้องระบุ allocator เอง — ไม่มี implicit heap allocation
+const allocator = std.heap.page_allocator;
+const data = try allocator.alloc(u8, file_size);
+defer allocator.free(data); // ต้อง free เอง
+
+// หรือใช้ ArrayList
+var buf = std.ArrayList(u8).init(allocator);
+defer buf.deinit();
+try file.reader().readAllArrayList(&buf, max_size);
+```
 
 ## Stack vs Heap
 

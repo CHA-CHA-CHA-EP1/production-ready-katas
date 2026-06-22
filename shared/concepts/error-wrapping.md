@@ -19,16 +19,62 @@ ReadConfig: open /etc/app/config.json: no such file or directory
   context ที่เพิ่ม      original error จาก OS
 ```
 
-## วิธี Wrap Error ใน Go
+## วิธี Wrap Error ในแต่ละภาษา
 
-### `fmt.Errorf` + `%w` (Go 1.13+)
+### Go: `fmt.Errorf` + `%w` (Go 1.13+)
 
+**Go:**
 ```go
 func ReadConfig(path string) ([]byte, error) {
     f, err := os.Open(path)
     if err != nil {
         return nil, fmt.Errorf("ReadConfig: %w", err)
     }
+    // ...
+}
+```
+
+**Rust:**
+```rust
+use std::fmt;
+
+#[derive(Debug)]
+struct ReadConfigError {
+    source: std::io::Error,
+    path: String,
+}
+
+impl fmt::Display for ReadConfigError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "ReadConfig {}: {}", self.path, self.source)
+    }
+}
+
+// หรือใช้ `anyhow` crate ที่ง่ายกว่า:
+use anyhow::Context;
+fn read_config(path: &str) -> anyhow::Result<Vec<u8>> {
+    std::fs::read(path)
+        .with_context(|| format!("ReadConfig: {}", path))
+}
+```
+
+**Zig:**
+```zig
+// Zig ใช้ error union — error type กำหนดตอน compile
+const ReadConfigError = error{
+    FileNotFound,
+    PermissionDenied,
+    FileTooLarge,
+    ReadFailed,
+};
+
+fn readConfig(path: []const u8) ReadConfigError![]u8 {
+    const f = std.fs.cwd().openFile(path, .{}) catch |err| switch (err) {
+        error.FileNotFound => return error.FileNotFound,
+        error.AccessDenied => return error.PermissionDenied,
+        else => return error.ReadFailed,
+    };
+    defer f.close();
     // ...
 }
 ```
@@ -130,6 +176,7 @@ EROFS   = 30   → Read-only file system
 
 Go map errno เหล่านี้มาเป็น `syscall.Errno` และ OS ห่อเป็น `*os.PathError` อีกชั้น:
 
+**Go:**
 ```go
 // error chain จาก os.Open ที่ล้มเหลว:
 // *os.PathError
@@ -147,6 +194,33 @@ pathErr.Err == syscall.ENOENT  // true
 
 **`os.ErrNotExist`** เป็น sentinel ที่ Go map มาจาก `syscall.ENOENT` (และ errno อื่นที่มีความหมายเดียวกัน)
 ใช้ `errors.Is(err, os.ErrNotExist)` แทนการเช็ค errno ตรงๆ เพื่อ portability
+
+**Rust:**
+```rust
+use std::io::ErrorKind;
+
+match std::fs::File::open("/nonexistent") {
+    Err(e) if e.kind() == ErrorKind::NotFound => {
+        // ENOENT — ไม่พบไฟล์
+    }
+    Err(e) if e.kind() == ErrorKind::PermissionDenied => {
+        // EACCES — ไม่มีสิทธิ์
+    }
+    _ => {}
+}
+// e.raw_os_error() คืน errno integer จาก OS โดยตรง
+```
+
+**Zig:**
+```zig
+const f = std.fs.cwd().openFile("/nonexistent", .{}) catch |err| switch (err) {
+    error.FileNotFound => { /* ENOENT */ },
+    error.AccessDenied => { /* EACCES */ },
+    error.ProcessFdQuotaExceeded => { /* EMFILE */ },
+    else => return err,
+};
+// Zig map errno เป็น error value ตอน compile — type-safe กว่า Go
+```
 
 ```bash
 # ดู errno จาก syscall จริง (Linux)
