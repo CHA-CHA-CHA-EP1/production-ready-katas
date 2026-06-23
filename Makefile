@@ -21,6 +21,17 @@ sync:
 			fi; \
 		done; \
 	done
+	@find $(SPEC_ROOT) -name '*.md' | while read spec; do \
+		dir=$$(dirname "$$spec" | sed 's|$(SPEC_ROOT)/||'); \
+		kata=$$(basename "$$spec" .md); \
+		for lang in $(LANGUAGES); do \
+			if [ ! -d "$$lang/$$dir/$$kata" ]; then \
+				mkdir -p "$$lang/$$dir/$$kata"; \
+				touch "$$lang/$$dir/$$kata/.gitkeep"; \
+				echo "  created: $$lang/$$dir/$$kata"; \
+			fi; \
+		done; \
+	done
 	@echo "Done."
 
 # Dry run — show missing folders without creating anything.
@@ -30,6 +41,16 @@ check-sync:
 		for lang in $(LANGUAGES); do \
 			if [ ! -d "$$lang/$$dir" ]; then \
 				echo "MISSING: $$lang/$$dir"; \
+				missing=1; \
+			fi; \
+		done; \
+	done; \
+	for spec in $$(find $(SPEC_ROOT) -name '*.md'); do \
+		dir=$$(dirname "$$spec" | sed 's|$(SPEC_ROOT)/||'); \
+		kata=$$(basename "$$spec" .md); \
+		for lang in $(LANGUAGES); do \
+			if [ ! -d "$$lang/$$dir/$$kata" ]; then \
+				echo "MISSING: $$lang/$$dir/$$kata"; \
 				missing=1; \
 			fi; \
 		done; \
