@@ -6,6 +6,11 @@ chat.md
 # Rust
 **/target/
 
+# Kata implementations (user work — not tracked)
+go/**/*.go
+rust/**/*.rs
+zig/**/*.zig
+
 # Go
 **/vendor/
 **/*.exe
