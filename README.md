@@ -89,6 +89,7 @@ Katas are grouped by domain. Numbering within each group goes from naive baselin
 | `data-handling` | datetime, timezone, encoding, parsing |
 | `resilience-and-consistency` | Atomic writes, crash recovery, consistency guarantees |
 | `system-design` | Architecture katas — design distributed systems from real incidents |
+| `authentication` | Password hashing, JWT, OAuth2, MFA, WebAuthn/Passkeys |
 
 ### Cloud-storage provider note
 
@@ -159,6 +160,25 @@ The kata spec tells you what to build. `Explore First` tells you where to look. 
 |---|---|
 | [Config Distribution Service](shared/assignment-specs/system-design/01-config-distribution-service.md) | 1 |
 
+#### authentication
+| Kata | Difficulty |
+|---|---|
+| [Password Hashing](shared/assignment-specs/authentication/01-password-hashing.md) | 1 |
+| [API Key Storage](shared/assignment-specs/authentication/02-api-key-storage.md) | 2 |
+| [User Enumeration Prevention](shared/assignment-specs/authentication/03-user-enumeration-prevention.md) | 2 |
+| [Secure Cookie Flags](shared/assignment-specs/authentication/04-secure-cookie-flags.md) | 1 |
+| [JWT Validation](shared/assignment-specs/authentication/05-jwt-validation.md) | 2 |
+| [JWT Algorithm Confusion](shared/assignment-specs/authentication/06-jwt-algorithm-confusion.md) | 3 |
+| [Token Refresh Pattern](shared/assignment-specs/authentication/07-token-refresh-pattern.md) | 2 |
+| [Token Revocation](shared/assignment-specs/authentication/08-token-revocation.md) | 3 |
+| [Basic Auth](shared/assignment-specs/authentication/09-basic-auth.md) | 1 |
+| [Bearer Token Storage](shared/assignment-specs/authentication/10-bearer-token-storage.md) | 2 |
+| [TOTP / MFA](shared/assignment-specs/authentication/11-totp-mfa.md) | 3 |
+| [Re-auth for Sensitive Ops](shared/assignment-specs/authentication/12-reauth-sensitive-ops.md) | 2 |
+| [OAuth2 State Parameter](shared/assignment-specs/authentication/13-oauth2-state-parameter.md) | 2 |
+| [PKCE Flow](shared/assignment-specs/authentication/14-pkce-flow.md) | 3 |
+| [WebAuthn / Passkeys](shared/assignment-specs/authentication/15-webauthn-passkeys.md) | 3 |
+
 ### Concept docs available
 
 | Concept | Description |
@@ -167,6 +187,12 @@ The kata spec tells you what to build. `Explore First` tells you where to look. 
 | [error-wrapping](shared/concepts/error-wrapping.md) | `%w`, `errors.Is/As`, errno, syscall error chain |
 | [memory-allocation](shared/concepts/memory-allocation.md) | Heap, page cache, virtual memory, OOM Killer, mmap |
 | [datetime-timezone](shared/concepts/datetime-timezone.md) | UTC storage, timezone conversion, parse formats |
+| [password-hashing](shared/concepts/password-hashing.md) | bcrypt/argon2, work factor, salt, timing attacks |
+| [jwt](shared/concepts/jwt.md) | JWT structure, claims, signing algorithms, algorithm confusion |
+| [session-management](shared/concepts/session-management.md) | Cookie flags, session fixation, CSRF, session lifecycle |
+| [mfa](shared/concepts/mfa.md) | TOTP algorithm, backup codes, MFA fatigue, SMS vs hardware key |
+| [oauth2](shared/concepts/oauth2.md) | OAuth2 flows, PKCE, state parameter, token types |
+| [webauthn](shared/concepts/webauthn.md) | Passkeys, public key crypto, phishing-resistance, sign counter |
 
 ### Skills (AI review guides)
 
