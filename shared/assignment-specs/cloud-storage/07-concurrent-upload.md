@@ -75,23 +75,23 @@ wg.Wait()
 
 ## Task
 
-เขียนฟังก์ชัน `ConcurrentUpload(client *minio.Client, bucket string, files []FileEntry, workers int) []UploadError` ที่:
+implement `concurrentUpload(client, bucket, files, workers)` ที่:
 
 1. upload ไฟล์ทั้งหมดใน `files` แบบ concurrent โดยใช้ worker pool ขนาด `workers`
 2. จำนวน goroutine ที่ active พร้อมกันต้องไม่เกิน `workers` เสมอ ไม่ว่า `files` จะมีกี่ตัว
 3. collect errors จากทุก goroutine — ไม่หยุดทำงานเมื่อ error แรกเกิดขึ้น
 4. return รายการ error ทุกตัว พร้อมบอกว่า file ไหนพัง
 
-```go
-type FileEntry struct {
-    Key    string
-    Reader io.ReadSeeker
-    Size   int64
+```
+fileEntry {
+  Key string
+  Reader seekable readable stream
+  Size number
 }
 
-type UploadError struct {
-    Key string
-    Err error
+uploadError {
+  Key string
+  Err error
 }
 ```
 

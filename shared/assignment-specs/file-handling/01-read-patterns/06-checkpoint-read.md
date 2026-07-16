@@ -85,13 +85,13 @@ Checkpoint ที่ดีต้องการ atomicity (เขียนสำ
 
 ## Task
 
-เขียน `CheckpointReader` struct ที่:
+implement `CheckpointReader` struct ที่:
 
-1. `Read(n int) ([]string, error)` — อ่าน n บรรทัดถัดไปจาก checkpoint ล่าสุด
-2. `Commit() error` — บันทึก checkpoint ปัจจุบันลงดิสก์แบบ atomic
-3. `Close() error` — ปิด resource ทั้งหมด
+1. `read(n)` — อ่าน n บรรทัดถัดไปจาก checkpoint ล่าสุด
+2. `commit()` — บันทึก checkpoint ปัจจุบันลงดิสก์แบบ atomic
+3. `close()` — ปิด resource ทั้งหมด
 
-พร้อม constructor `NewCheckpointReader(dataPath, checkpointPath string) (*CheckpointReader, error)`
+พร้อม constructor `newCheckpointReader(dataPath, checkpointPath)`
 
 ## Requirements
 

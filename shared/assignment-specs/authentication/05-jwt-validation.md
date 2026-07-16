@@ -74,16 +74,16 @@ signature verification เป็นแค่ขั้นแรก — claims val
 
 ## Task
 
-เขียนฟังก์ชัน:
+implement :
 
-```go
-type Claims struct {
-    jwt.RegisteredClaims
-    UserID string `json:"user_id"`
-    Role   string `json:"role"`
+```
+claims {
+  jwt.RegisteredClaims
+  UserID string `json:"user_id"`
+  Role string `json:"role"`
 }
 
-func ValidateToken(tokenString, secret, expectedIssuer, expectedAudience string) (*Claims, error)
+validateToken(tokenString, secret, expectedIssuer, expectedAudience) → *Claims, error
 ```
 
 `ValidateToken` verify JWT และ validate claims ทั้งหมด คืน `*Claims` เมื่อ valid

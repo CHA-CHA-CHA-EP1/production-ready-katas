@@ -68,20 +68,20 @@ attacker ไม่ต้องการ error message — แค่ response tim
 
 ## Task
 
-เขียนฟังก์ชัน:
+implement :
 
-```go
+```
 type DB interface {
     FindUser(username string) (*User, error)
 }
 
-type User struct {
-    ID           string
-    Username     string
-    PasswordHash string
+user {
+  ID string
+  Username string
+  PasswordHash string
 }
 
-func Login(db DB, username, password string) (*User, error)
+login(db, username, password) → *User, error
 ```
 
 `Login` ตรวจสอบ credential และคืน `*User` เมื่อสำเร็จ

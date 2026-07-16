@@ -67,13 +67,13 @@ Sudo mode แก้ปัญหานี้ด้วยการ require fresh a
 
 เขียน middleware และฟังก์ชัน:
 
-1. `RequireSudoMode(maxAge time.Duration, next http.Handler) http.Handler` — middleware ที่ตรวจว่ามี sudo mode ที่ยังไม่หมดอายุ ถ้าไม่มีให้ redirect ไปหน้า re-auth
-2. `GrantSudoMode(w http.ResponseWriter, r *http.Request, verifiedAt time.Time)` — บันทึก sudo mode timestamp หลัง re-auth สำเร็จ
+1. `requireSudoMode(maxAge, next)` — middleware ที่ตรวจว่ามี sudo mode ที่ยังไม่หมดอายุ ถ้าไม่มีให้ redirect ไปหน้า re-auth
+2. `grantSudoMode(w, r, verifiedAt)` — บันทึก sudo mode timestamp หลัง re-auth สำเร็จ
 
 และ helper:
 
-```go
-func IsSudoMode(r *http.Request, maxAge time.Duration) bool
+```
+isSudoMode(r, maxAge)
 ```
 
 ## Requirements

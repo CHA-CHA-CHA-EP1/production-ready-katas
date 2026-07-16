@@ -60,7 +60,7 @@ retry ที่ดีต้องแยกแยะ retryable error ออกจ
 
 ## Task
 
-เขียนฟังก์ชัน `UploadWithRetry(client *minio.Client, bucket, key string, r io.ReadSeeker, maxAttempts int) error` ที่:
+implement `uploadWithRetry(client, bucket, key, r, maxAttempts)` ที่:
 
 1. upload object ไปยัง S3-compatible storage
 2. retry เมื่อเจอ retryable error (503, 429, network timeout) โดยใช้ exponential backoff

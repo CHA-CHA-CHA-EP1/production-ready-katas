@@ -81,12 +81,12 @@ chunk := data[1000000 : 1000000+size]
 
 ## Task
 
-เขียนฟังก์ชัน `ReadAt(path string, offset int64, size int) ([]byte, error)` ที่:
+implement `readAt(path, offset, size)` ที่:
 
 1. อ่านข้อมูล `size` bytes จาก `offset` ที่กำหนด
 2. ไม่โหลดข้อมูลส่วนอื่นของไฟล์
 
-จากนั้นเขียน `ReadPages(path string, pageSize int, pageIDs []int) (map[int][]byte, error)` ที่:
+จากนั้นเขียน `readPages(path, pageSize, pageIDs)` ที่:
 
 1. อ่าน page ตาม pageID แต่ละอัน (page = fixed-size block ใน file)
 2. รองรับการเรียกพร้อมกัน — สามารถ refactor ให้ใช้ goroutine ได้

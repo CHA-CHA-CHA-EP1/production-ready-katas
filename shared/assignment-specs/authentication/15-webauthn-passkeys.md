@@ -74,14 +74,14 @@ WebAuthn เปลี่ยน model เป็น "user มี" (private key บ
 
 Implement registration flow และ login flow สำหรับ WebAuthn:
 
-```go
+```
 // Registration
-func BeginRegistration(userID string) (*protocol.CredentialCreation, error)
-func FinishRegistration(userID string, response *protocol.ParsedCredentialCreationData) error
+beginRegistration(userID) → *protocol.CredentialCreation, error
+finishRegistration(userID, response) → error
 
 // Login (Authentication)
-func BeginLogin(userID string) (*protocol.CredentialAssertion, error)
-func FinishLogin(userID string, response *protocol.ParsedCredentialRequestData) (*webauthn.Credential, error)
+beginLogin(userID) → *protocol.CredentialAssertion, error
+finishLogin(userID, response) → *webauthn.Credential, error
 ```
 
 `BeginRegistration` สร้าง WebAuthn challenge สำหรับ registration, เก็บ session data, คืน `CredentialCreation` ที่ส่งให้ browser

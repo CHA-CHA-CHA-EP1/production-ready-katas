@@ -86,13 +86,13 @@ process(buf)
 
 ## Task
 
-เขียนฟังก์ชัน `ReadChunked(path string, chunkSize int, fn func([]byte) error) error` ที่:
+implement `readChunked(path, chunkSize, fn)` ที่:
 
 1. อ่านไฟล์ทีละ chunk ขนาด `chunkSize` bytes
 2. เรียก `fn` ทุกครั้งที่ได้ chunk — `fn` ได้รับข้อมูลครบเสมอ ยกเว้น chunk สุดท้ายที่อาจสั้นกว่า
 3. หยุดและ return error ถ้า `fn` return error
 
-จากนั้นเขียน `ReadExact(r io.Reader, n int) ([]byte, error)` ที่:
+จากนั้นเขียน `readExact(r, n)` ที่:
 
 1. อ่านข้อมูลให้ได้ครบ n bytes เสมอ
 2. ถ้าไฟล์หมดก่อน n bytes → return error
@@ -101,7 +101,7 @@ process(buf)
 
 - `fn` ต้องได้รับ slice ที่มีข้อมูลจริงเท่านั้น — ห้ามส่ง trailing zeros จาก buffer
 - `ReadExact` ต้องไม่ return partial data — ครบหรือ error เท่านั้น
-- ห้ามใช้ `io.ReadAll` หรือ `os.ReadFile`
+- ห้ามใช้ read-all shortcut หรือ stdlib one-liner shortcut
 - Buffer ต้อง reuse ข้ามการเรียก `fn` ได้ (ไม่ allocate ใหม่ทุก chunk)
 
 ## Acceptance Criteria
@@ -110,7 +110,7 @@ process(buf)
 - [ ] chunk สุดท้ายที่เล็กกว่า `chunkSize` ถูกส่งถูกต้อง ไม่มี zero padding
 - [ ] ถ้า `fn` return error การอ่านหยุดและ error ถูก propagate
 - [ ] `ReadExact` คืน error ถ้าข้อมูลน้อยกว่า n bytes
-- [ ] ทดสอบกับ `io.Reader` ที่ return partial data จงใจ (เช่น `iotest.HalfReader`)
+- [ ] ทดสอบกับ `readable stream` ที่ return partial data จงใจ (เช่น `iotest.HalfReader`)
 
 ## Concepts Involved
 

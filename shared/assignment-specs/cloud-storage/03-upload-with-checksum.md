@@ -65,7 +65,7 @@ if err == nil {
 
 ## Task
 
-เขียนฟังก์ชัน `UploadWithChecksum(client *minio.Client, bucket, key string, r io.Reader, size int64) error` ที่:
+implement `uploadWithChecksum(client, bucket, key, r, size)` ที่:
 
 1. คำนวณ MD5 checksum ของ content ระหว่าง stream (ไม่ใช่ buffer ทั้งหมดก่อน)
 2. Upload ไปยัง MinIO/S3

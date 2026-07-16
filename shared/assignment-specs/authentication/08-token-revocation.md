@@ -77,15 +77,15 @@ Redis TTL ทำงานได้ perfect สำหรับ use case นี้
 
 เขียนสองส่วน:
 
-```go
+```
 type TokenStore interface {
-    AddToBlocklist(ctx context.Context, jti string, ttl time.Duration) error
-    IsBlocklisted(ctx context.Context, jti string) (bool, error)
+    AddToBlocklist(ctx cancellation context, jti string, ttl duration) error
+    IsBlocklisted(ctx cancellation context, jti string) (bool, error)
 }
 
-func RevokeToken(ctx context.Context, store TokenStore, tokenString, secret string) error
+revokeToken(ctx, store, tokenString, secret) → error
 
-func RequireValidToken(store TokenStore, secret string, next http.Handler) http.Handler
+requireValidToken(store, secret, next) → HTTP middleware handler
 ```
 
 `RevokeToken` parse token, extract `jti` และ remaining TTL, เพิ่มลง blocklist

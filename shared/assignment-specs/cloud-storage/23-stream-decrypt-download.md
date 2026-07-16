@@ -75,9 +75,9 @@ GCM จริงๆ ต้องการ ciphertext ทั้งหมดก่
 
 ## Task
 
-เขียนฟังก์ชัน `StreamDecryptDownload` ที่ pipe S3 download ผ่าน AES-GCM decryption ไปยัง writer โดยตรง:
+implement `StreamDecryptDownload` ที่ pipe S3 download ผ่าน AES-GCM decryption ไปยัง writer โดยตรง:
 
-```go
+```
 // StreamDecryptDownload download object จาก S3/MinIO แล้ว decrypt streaming ไปยัง writer
 // - อ่าน nonce จาก 12 bytes แรกของ S3 stream
 // - decrypt ส่วนที่เหลือและ write ไปยัง w
@@ -86,12 +86,12 @@ GCM จริงๆ ต้องการ ciphertext ทั้งหมดก่
 //
 // เป็น pair กับ ClientSideEncryptUpload (kata 22)
 // format ใน S3: [nonce (12 bytes)][ciphertext + GCM tag (16 bytes)]
-func StreamDecryptDownload(
-    ctx context.Context,
-    s3Client *minio.Client,
+func treamDecryptDownload(
+    ctx cancellation context,
+    s3Client ,
     bucket, key string,
-    aesKey []byte,
-    w io.Writer,
+    aesKey list,
+    w writable stream,
 ) error
 ```
 

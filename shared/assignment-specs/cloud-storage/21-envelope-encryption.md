@@ -103,20 +103,20 @@ sequenceDiagram
 
 ## Task
 
-เขียนสองฟังก์ชันสำหรับ envelope encryption workflow:
+implement สองฟังก์ชันสำหรับ envelope encryption workflow:
 
-```go
+```
 // EncryptAndUpload เข้ารหัสไฟล์ด้วย envelope encryption แล้ว upload ไปยัง S3
 // - สร้าง DEK ใหม่ต่อไฟล์ผ่าน KMS GenerateDataKey
 // - เข้ารหัสไฟล์ด้วย DEK (AES-256-GCM)
 // - เก็บ encrypted DEK ไว้ใน S3 object metadata
 // - ลบ plaintext DEK จาก memory ทันทีหลังใช้งาน
-func EncryptAndUpload(
-    ctx context.Context,
+func ncryptAndUpload(
+    ctx cancellation context,
     s3Client *s3.Client,
-    kmsClient *kms.Client,
+    kmsClient ,
     bucket, key, kmsKeyID string,
-    plaintext io.Reader,
+    plaintext readable stream,
 ) error
 
 // DownloadAndDecrypt download object จาก S3 แล้ว decrypt ด้วย envelope decryption
@@ -124,12 +124,12 @@ func EncryptAndUpload(
 // - ถอดรหัส DEK ผ่าน KMS Decrypt
 // - ถอดรหัสไฟล์ด้วย DEK (AES-256-GCM)
 // - ลบ plaintext DEK จาก memory ทันทีหลังใช้งาน
-func DownloadAndDecrypt(
-    ctx context.Context,
+func ownloadAndDecrypt(
+    ctx cancellation context,
     s3Client *s3.Client,
-    kmsClient *kms.Client,
+    kmsClient ,
     bucket, key string,
-) (io.Reader, error)
+) (readable stream, error)
 ```
 
 ## Requirements

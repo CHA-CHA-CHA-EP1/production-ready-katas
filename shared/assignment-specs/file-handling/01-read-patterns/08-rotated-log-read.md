@@ -87,9 +87,9 @@ logrotate เปลี่ยน path ที่ชี้ไป inode แต่ fd
 
 ## Task
 
-เขียน `LogTailer` struct ที่:
+implement `LogTailer` struct ที่:
 
-1. `Start(ctx context.Context) (<-chan string, error)` — เริ่ม tail `path` แบบ follow (`tail -F`)
+1. `start(ctx)` — เริ่ม tail `path` แบบ follow (`tail -F`)
 2. detect การ rotation โดย compare inode ของ path กับ fd ที่กำลังอ่าน
 3. เมื่อ detect rotation: drain ไฟล์เก่าจนหมด → reopen path ใหม่ → อ่านต่อ
 

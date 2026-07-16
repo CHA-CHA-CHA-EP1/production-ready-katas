@@ -87,8 +87,8 @@ func HandleUpload(w http.ResponseWriter, r *http.Request) {
 
 เขียน Lambda function สำหรับ virus scan gate:
 
-```go
-func ScanAndApprove(ctx context.Context, event events.S3Event) error
+```
+scanAndApprove(ctx, event) → error
 ```
 
 ฟังก์ชันต้องทำตามขั้นตอน:
@@ -101,15 +101,15 @@ func ScanAndApprove(ctx context.Context, event events.S3Event) error
 
 เพิ่มเติม — เขียน helper:
 
-```go
+```
 // MockScanner simulate virus scan (returns true ถ้าพบ malware)
-func MockScanner(content []byte) bool
+mockScanner(content)
 
 // moveToApproved copy จาก quarantine/ → approved/ แล้ว delete จาก quarantine
-func moveToApproved(ctx context.Context, client *s3.Client, bucket, key string) error
+moveToApproved(ctx, client, bucket, key) → error
 
 // tagScanResult tag object ด้วย scan result
-func tagScanResult(ctx context.Context, client *s3.Client, bucket, key, status string) error
+tagScanResult(ctx, client, bucket, key, status) → error
 ```
 
 ## Requirements

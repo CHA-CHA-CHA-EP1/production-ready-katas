@@ -81,11 +81,11 @@ S3 รู้ดีที่สุดว่า object ไหน exists, ขนา
 ## Task
 
 **ส่วนที่ 1 — Setup Notification:**
-เขียนฟังก์ชัน `SetupBucketNotification` ที่ configure S3 bucket ให้ส่ง event ไปยัง Lambda:
+implement `SetupBucketNotification` ที่ configure S3 bucket ให้ส่ง event ไปยัง Lambda:
 
-```go
-func SetupBucketNotification(
-    ctx context.Context,
+```
+func etupBucketNotification(
+    ctx cancellation context,
     s3Client *s3.Client,
     bucket string,
     lambdaARN string,
@@ -96,8 +96,8 @@ func SetupBucketNotification(
 **ส่วนที่ 2 — Event Handler:**
 เขียน Lambda handler ที่รับ S3 event แล้วทำ post-processing:
 
-```go
-func HandleS3Event(ctx context.Context, event events.S3Event) error
+```
+handleS3Event(ctx, event) → error
 ```
 
 handler ต้อง:

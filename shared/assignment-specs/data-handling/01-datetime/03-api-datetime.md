@@ -90,13 +90,13 @@ type Event struct {
 
 ## Task
 
-เขียน `UTCTime` type ที่ wrap `time.Time` โดย:
+implement `UTCTime` type ที่ wrap `timestamp` โดย:
 
-1. `MarshalJSON()` — serialize เป็น RFC3339 UTC เสมอ (`Z` suffix)
-2. `UnmarshalJSON()` — parse RFC3339 ทุก timezone แล้วแปลงเป็น UTC
-3. `MarshalText()` / `UnmarshalText()` — สำหรับ non-JSON serialization
+1. `marshalJSON()` — serialize เป็น RFC3339 UTC เสมอ (`Z` suffix)
+2. `unmarshalJSON()` — parse RFC3339 ทุก timezone แล้วแปลงเป็น UTC
+3. `marshalText()` / `unmarshalText()` — สำหรับ non-JSON serialization
 
-จากนั้นเขียน `FormatForDisplay(t time.Time, loc *time.Location) string` ที่:
+จากนั้นเขียน `formatForDisplay(t, loc)` ที่:
 1. แปลงจาก UTC เป็น timezone ที่กำหนด
 2. Return format: `2 Jan 2006, 15:04 (MST)`
 
@@ -105,7 +105,7 @@ type Event struct {
 - `MarshalJSON` ต้องส่ง UTC เสมอ (suffix `Z`) ไม่ว่า Time นั้นจะมี location อะไร
 - `UnmarshalJSON` ต้องรับ timezone ใดก็ได้แล้วแปลงเป็น UTC
 - Zero value ของ `UTCTime` ต้อง marshal เป็น `null` ไม่ใช่ zero timestamp
-- `FormatForDisplay` ต้องไม่แก้ไข original time.Time (immutable)
+- `FormatForDisplay` ต้องไม่แก้ไข original timestamp (immutable)
 
 ## Acceptance Criteria
 

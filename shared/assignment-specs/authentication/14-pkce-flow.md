@@ -78,17 +78,17 @@ PKCE แก้โดยใช้ one-time cryptographic proof แทน client_s
 
 ## Task
 
-เขียนฟังก์ชัน generate PKCE values และ full PKCE flow:
+implement generate PKCE values และ full PKCE flow:
 
-```go
+```
 // สร้าง code_verifier และ code_challenge คู่กัน
-func GeneratePKCE() (verifier, challenge string, err error)
+generatePKCE() → verifier, challenge , err error
 
 // เริ่ม OAuth flow พร้อม PKCE — เก็บ verifier ใน session
-func InitiateOAuthFlowWithPKCE(w http.ResponseWriter, r *http.Request, oauthConfig *oauth2.Config) error
+initiateOAuthFlowWithPKCE(w, r, oauthConfig) → error
 
 // รับ callback — ดึง verifier จาก session แล้วส่งพร้อม token exchange
-func HandleOAuthCallbackWithPKCE(w http.ResponseWriter, r *http.Request, oauthConfig *oauth2.Config) (*oauth2.Token, error)
+handleOAuthCallbackWithPKCE(w, r, oauthConfig) → *oauth2.Token, error
 ```
 
 `GeneratePKCE` สร้าง cryptographically random code_verifier แล้วคำนวณ code_challenge ด้วย S256 method

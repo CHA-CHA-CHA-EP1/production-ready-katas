@@ -82,7 +82,7 @@ open(path, O_WRONLY|O_TRUNC) → write() → close()
 
 ## Task
 
-เขียนฟังก์ชัน `WriteFileAtomic(path string, data []byte, perm os.FileMode) error` ที่:
+implement `writeFileAtomic(path, data, perm)` ที่:
 
 1. รับ target path, content ที่จะเขียน, และ file permission
 2. เขียน content ไปยัง temp file ในโฟลเดอร์เดียวกับ target

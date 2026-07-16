@@ -63,14 +63,14 @@ _, err = s3Client.PutObject(ctx, &s3.PutObjectInput{
 
 ## Task
 
-เขียนฟังก์ชัน `UploadWithSSE` ที่รองรับทั้ง SSE-S3 และ SSE-KMS:
+implement `UploadWithSSE` ที่รองรับทั้ง SSE-S3 และ SSE-KMS:
 
-```go
-func UploadWithSSE(
-    ctx context.Context,
+```
+func ploadWithSSE(
+    ctx cancellation context,
     client *s3.Client,
     bucket, key string,
-    r io.Reader,
+    r readable stream,
     encryptionType string, // "SSE-S3" หรือ "SSE-KMS"
     kmsKeyID string,        // ใช้เฉพาะตอน encryptionType == "SSE-KMS"
 ) error

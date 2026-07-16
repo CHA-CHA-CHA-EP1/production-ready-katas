@@ -76,23 +76,23 @@ DB และ S3 เป็น two separate systems — ต้องมี verific
 
 ## Task
 
-เขียนฟังก์ชัน `ConfirmUpload(client *minio.Client, bucket, key string, expectedSize int64) error` ที่:
+implement `confirmUpload(client, bucket, key, expectedSize)` ที่:
 
 1. ตรวจสอบว่า object ใน S3 มีอยู่จริง
 2. ถ้า `expectedSize >= 0` ให้ตรวจสอบว่า object size ตรงกับที่คาด
 3. return typed error ที่บอกสาเหตุได้ชัดเจน
 
-```go
+```
 // ตัวอย่าง error types ที่ควรสร้าง:
-type ErrObjectNotFound struct {
-    Bucket string
-    Key    string
+errObjectNotFound {
+  Bucket string
+  Key string
 }
 
-type ErrSizeMismatch struct {
-    Key      string
-    Expected int64
-    Actual   int64
+errSizeMismatch {
+  Key string
+  Expected number
+  Actual number
 }
 ```
 
@@ -110,7 +110,7 @@ type ErrSizeMismatch struct {
 - [ ] object ไม่มีอยู่ → return `ErrObjectNotFound` (ไม่ใช่ generic error)
 - [ ] object มีอยู่แต่ size ไม่ตรง → return `ErrSizeMismatch` พร้อม expected vs actual
 - [ ] `expectedSize = -1` → return nil ถ้า object มีอยู่ (ไม่ check size)
-- [ ] caller ใช้ `errors.As` เพื่อ extract error type ได้
+- [ ] caller ใช้ error type inspection เพื่อ extract error type ได้
 - [ ] network error จาก S3 → return error ที่ wrap ด้วย context
 
 ## Concepts Involved

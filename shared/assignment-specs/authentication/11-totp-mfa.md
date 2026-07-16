@@ -68,13 +68,13 @@ TOTP security ขึ้นอยู่กับสามอย่าง: secret 
 
 เขียนสามฟังก์ชัน:
 
-1. `SetupMFA(userID string) (secret, qrURL string, err error)` — generate TOTP secret และ QR code URL สำหรับ setup
-2. `VerifyMFA(secret, code string) bool` — verify TOTP code พร้อม clock skew tolerance
-3. `GenerateBackupCodes() ([]string, error)` — generate backup codes 8 อัน พร้อม hashed versions สำหรับเก็บใน DB
+1. `setupMFA(userID)` — generate TOTP secret และ QR code URL สำหรับ setup
+2. `verifyMFA(secret, code)` — verify TOTP code พร้อม clock skew tolerance
+3. `generateBackupCodes()` — generate backup codes 8 อัน พร้อม hashed versions สำหรับเก็บใน DB
 
 และ interface สำหรับ rate limiter:
 
-```go
+```
 type MFARateLimiter interface {
     Allow(userID string) bool      // true = allowed, false = rate limited
     Reset(userID string)           // เมื่อ login สำเร็จ
@@ -99,7 +99,7 @@ type MFARateLimiter interface {
 - [ ] `VerifyMFA` return true สำหรับ code ของ window ก่อนหน้าหรือถัดไป (clock skew ±30s)
 - [ ] `VerifyMFA` return false สำหรับ code ที่หมดอายุนานกว่า 1 window (เช่น 2 minutes ago)
 - [ ] `GenerateBackupCodes` return 8 codes ที่แตกต่างกันทั้งหมด ไม่มี duplicate
-- [ ] Hashed backup codes ที่ return มาสามารถ verify ได้ด้วย `sha256.Sum256([]byte(code))`
+- [ ] Hashed backup codes ที่ return มาสามารถ verify ได้ด้วย `sha256.Sum256(bytes(code))`
 - [ ] `MFARateLimiter` interface ทำงานถูกต้อง — หลัง 5 attempts ใน 5 นาที, `Allow` return false
 - [ ] `Allow` return true อีกครั้งหลัง window หมด (หรือหลัง `Reset` ถูกเรียก)
 - [ ] มี test: valid code, expired code, wrong code, clock skew boundary, backup code happy path, rate limit boundary

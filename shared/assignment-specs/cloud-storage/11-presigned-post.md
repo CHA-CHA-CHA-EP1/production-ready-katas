@@ -65,7 +65,7 @@ S3 ต้องเป็นคน enforce ข้อจำกัด — presigned
 
 ## Task
 
-เขียนฟังก์ชัน `GenerateConstrainedUploadPolicy(client *minio.Client, bucket, keyPrefix string, maxSizeMB int, allowedTypes []string, expiry time.Duration) (*url.URL, map[string]string, error)` ที่:
+implement `generateConstrainedUploadPolicy(client, bucket, keyPrefix, maxSizeMB, allowedTypes, expiry)` ที่:
 
 1. สร้าง presigned POST policy ที่ S3 enforce ข้อจำกัดต่อไปนี้:
    - key ต้องขึ้นต้นด้วย `keyPrefix`

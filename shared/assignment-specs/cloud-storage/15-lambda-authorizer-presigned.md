@@ -76,9 +76,9 @@ AWS credentials เป็น long-lived secret ที่ให้ permission ร
 
 เขียน Lambda handler ที่ทำหน้าที่เป็น auth gate สำหรับ presigned URL:
 
-```go
-func Handler(
-    ctx context.Context,
+```
+func andler(
+    ctx cancellation context,
     req events.APIGatewayProxyRequest,
 ) (events.APIGatewayProxyResponse, error)
 ```
@@ -92,12 +92,12 @@ handler ต้องทำตามขั้นตอน:
 
 เพิ่มเติม — เขียน helper:
 
-```go
+```
 func generatePresignedUploadURL(
-    ctx context.Context,
+    ctx cancellation context,
     cfg aws.Config,
     bucket, key, contentType string,
-    expiry time.Duration,
+    expiry duration,
 ) (string, error)
 ```
 

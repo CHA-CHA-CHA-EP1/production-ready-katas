@@ -66,11 +66,11 @@ bcrypt แก้ปัญหานี้ด้วย work factor ที่ปร
 
 ## Task
 
-เขียนสองฟังก์ชัน:
+implement สองฟังก์ชัน:
 
-```go
-func HashPassword(password string) (string, error)
-func VerifyPassword(hash, password string) bool
+```
+hashPassword(password) → error
+verifyPassword(hash, password)
 ```
 
 `HashPassword` รับ plain text password แล้วคืน bcrypt hash ที่พร้อมเก็บใน database

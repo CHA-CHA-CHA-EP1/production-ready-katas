@@ -80,14 +80,14 @@ presigned URL ออกแบบมาสำหรับ access แบบ one-of
 
 ## Task
 
-เขียนฟังก์ชัน `GenerateSignedCookies` สำหรับ private video streaming:
+implement `GenerateSignedCookies` สำหรับ private video streaming:
 
-```go
-func GenerateSignedCookies(
-    privateKey *rsa.PrivateKey,
+```
+func enerateSignedCookies(
+    privateKey ,
     keyPairID string,
     resourceURL string,  // e.g. "https://cdn.example.com/videos/123/*"
-    expiry time.Time,
+    expiry timestamp,
 ) (map[string]string, error)
 ```
 
@@ -96,8 +96,8 @@ func GenerateSignedCookies(
 
 นอกจากนี้ให้เขียน helper สำหรับ load private key จาก PEM:
 
-```go
-func LoadPrivateKey(pemPath string) (*rsa.PrivateKey, error)
+```
+loadPrivateKey(pemPath) → *rsa.PrivateKey, error
 ```
 
 ## Requirements

@@ -82,7 +82,7 @@ return lines[max(0, len(lines)-n):]
 
 ## Task
 
-เขียนฟังก์ชัน `TailLines(path string, n int) ([]string, error)` ที่:
+implement `tailLines(path, n)` ที่:
 
 1. คืน n บรรทัดสุดท้ายของไฟล์
 2. ใช้ seek อ่านจากท้ายไฟล์ — ไม่อ่านทั้งไฟล์

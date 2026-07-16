@@ -90,8 +90,8 @@ HTTP handler ถูกออกแบบมาสำหรับ short-lived req
 
 เขียน Lambda function ที่ triggered จาก S3 event แล้วทำ image processing:
 
-```go
-func ProcessUpload(ctx context.Context, event events.S3Event) error
+```
+processUpload(ctx, event) → error
 ```
 
 ฟังก์ชันต้องทำตามขั้นตอน:
@@ -104,8 +104,8 @@ func ProcessUpload(ctx context.Context, event events.S3Event) error
 
 เพิ่มเติม — เขียน helper:
 
-```go
-func resizeImage(src io.Reader, width, height int) (io.Reader, error)
+```
+resizeImage(src, width, height) → readable stream, error
 ```
 
 ## Requirements

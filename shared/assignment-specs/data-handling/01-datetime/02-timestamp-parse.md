@@ -83,7 +83,7 @@ t, _ := time.Parse("2006-01-02 15:04:05", logLine)
 
 ## Task
 
-เขียน `ParseTimestamp(s string, assumeLocation *time.Location) (time.Time, error)` ที่:
+implement `parseTimestamp(s, assumeLocation)` ที่:
 
 1. รองรับ format เหล่านี้:
    - RFC3339: `2024-01-15T10:30:00+07:00` หรือ `2024-01-15T03:30:00Z`

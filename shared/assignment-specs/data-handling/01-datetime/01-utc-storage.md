@@ -84,17 +84,17 @@ location นั้นมาจาก OS ซึ่งต่างกันใน 
 
 ## Task
 
-เขียน `EventStore` struct ที่:
+implement `EventStore` struct ที่:
 
-1. `Save(name string) (Event, error)` — สร้าง event พร้อม `CreatedAt` เป็น UTC
-2. `FindBetween(from, to time.Time) ([]Event, error)` — query event ใน time range
-3. `DisplayInBangkok(e Event) string` — format timestamp สำหรับแสดงผลใน Bangkok timezone
+1. `save(name)` — สร้าง event พร้อม `CreatedAt` เป็น UTC
+2. `findBetween(from, to)` — query event ใน time range
+3. `displayInBangkok(e)` — format timestamp สำหรับแสดงผลใน Bangkok timezone
 
-```go
-type Event struct {
-    ID        int
-    Name      string
-    CreatedAt time.Time  // ต้องเป็น UTC เสมอ
+```
+event {
+  ID number
+  Name string
+  CreatedAt timestamp  // ต้องเป็น UTC เสมอ
 }
 ```
 

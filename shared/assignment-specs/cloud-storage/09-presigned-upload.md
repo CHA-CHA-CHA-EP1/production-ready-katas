@@ -66,7 +66,7 @@ S3 ออกแบบมาให้รับ upload โดยตรงจาก
 
 ## Task
 
-เขียนฟังก์ชัน `GenerateUploadURL(client *minio.Client, bucket, key string, expiry time.Duration) (string, error)` ที่:
+implement `generateUploadURL(client, bucket, key, expiry)` ที่:
 
 1. generate presigned PUT URL สำหรับ upload object ไปยัง S3-compatible storage
 2. URL ต้องใช้งานได้โดยตรงจาก frontend โดยไม่ต้องผ่าน backend อีกครั้ง

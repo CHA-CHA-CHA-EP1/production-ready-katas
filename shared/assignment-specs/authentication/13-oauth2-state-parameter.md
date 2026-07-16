@@ -79,12 +79,12 @@ State parameter สร้าง binding ระหว่าง authorization requ
 
 ## Task
 
-เขียนสองฟังก์ชัน:
+implement สองฟังก์ชัน:
 
-```go
-func InitiateOAuthFlow(w http.ResponseWriter, r *http.Request, oauthConfig *oauth2.Config) (state string, err error)
+```
+initiateOAuthFlow(w, r, oauthConfig) → state , err error
 
-func HandleOAuthCallback(w http.ResponseWriter, r *http.Request, oauthConfig *oauth2.Config) (*oauth2.Token, error)
+handleOAuthCallback(w, r, oauthConfig) → *oauth2.Token, error
 ```
 
 `InitiateOAuthFlow` สร้าง cryptographically random state, เก็บไว้ใน session พร้อม expiry, แล้ว redirect user ไป OAuth provider
