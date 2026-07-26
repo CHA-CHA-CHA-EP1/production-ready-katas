@@ -76,6 +76,11 @@ Whole-file read โหลด content ทั้งหมดเข้า memory �
 - hint: `std::io::Read` trait — `read()` method มี signature ยังไง? `n` ที่ return หมายความว่าอะไร?
 - `File` implement trait อะไรจาก `std::io` บ้าง? แต่ละ trait มี contract ว่าอะไร?
 - Rust จัดการ fd lifecycle ยังไงโดยไม่มี `defer`? `Drop` trait เกี่ยวข้องยังไง?
+- hint: `std::os::unix::fs::OpenOptionsExt` — `custom_flags()` ใช้ทำอะไร? ต่างจาก `OpenOptions` ปกติยังไง?
+- `O_NOFOLLOW` คือ flag อะไร? ถ้า path เป็น symlink kernel จะ return error code อะไร? (`ELOOP`) — แล้วจะ map error นั้นเป็น custom error type ได้ยังไงใน Rust?
+- ทำไม `symlink_metadata(path).is_symlink()` ก่อน `File::open` ถึงไม่ปลอดภัยพอ? มี race condition ตรงไหน?
+- `file.metadata().len()` กับ `file.metadata().size()` (จาก `MetadataExt`) ต่างกันยังไง? อันไหน cross-platform?
+- ถ้าลืมใส่ `?` หลัง `read_to_end(&mut buf)` — compiler จะบอกอะไร? warning หรือ error? ทำไม? (hint: `#[must_use]`)
 
 ### Zig
 
@@ -103,6 +108,7 @@ implement `readConfig` ที่:
 - ต้องปฏิเสธไฟล์ที่ใหญ่กว่า 1 MB โดย return error ที่อ่านออก (ไม่ใช่ panic)
 - ห้ามใช้ stdlib one-liner shortcut — ต้องเปิด/อ่าน/ปิด resource เอง เพื่อให้เห็น lifecycle
 - Error message ต้องบอก context ได้ เช่น "`ReadConfig: open /etc/app/config.json: no such file or directory`" ไม่ใช่แค่ `"file not found"`
+- **Rust เท่านั้น:** ต้องใช้ `O_NOFOLLOW` ผ่าน `OpenOptionsExt` เพื่อปฏิเสธ symlink — ห้ามใช้ `symlink_metadata().is_symlink()` เพราะมี TOCTOU race ระหว่าง stat กับ open
 
 ## Acceptance Criteria
 
@@ -110,8 +116,10 @@ implement `readConfig` ที่:
 - [ ] คืน error ถ้าไฟล์ไม่มีอยู่ (file-not-found error check เป็น true)
 - [ ] คืน error ถ้าไฟล์ขนาดเกิน 1 MB — ยอมรับทั้ง Stat-before-read และ LimitReader approach แต่ต้องอธิบายได้ว่าแต่ละแบบมี tradeoff อะไร และทำไมถึงควรมีทั้งสองชั้น (defense-in-depth)
 - [ ] คืน error ถ้าไม่มีสิทธิ์อ่าน (`permission denied`)
-- [ ] ไม่มี fd leak — หลังเรียกฟังก์ชัน ไม่ว่าจะ success หรือ error fd ต้องถูกปิดแล้ว (- [ ] ฟังก์ชันทนต่อการเรียกพร้อมกัน 100 ครั้ง (concurrent-safe) — ไม่มี shared mutable state
-- [ ] มี test ครอบคลุม: happy path, file not found, file too large, permission denied
+- [ ] ไม่มี fd leak — หลังเรียกฟังก์ชัน ไม่ว่าจะ success หรือ error fd ต้องถูกปิดแล้ว
+- [ ] ฟังก์ชันทนต่อการเรียกพร้อมกัน 100 ครั้ง (concurrent-safe) — ไม่มี shared mutable state
+- [ ] คืน error ถ้า path เป็น symlink — และการ check ต้องเป็น atomic (ไม่มี TOCTOU between stat and open)
+- [ ] มี test ครอบคลุม: happy path, file not found, file too large, permission denied, symlink
 
 ## Concepts Involved
 
@@ -125,3 +133,11 @@ implement `readConfig` ที่:
 - **ใช้จริง:** `os.ReadFile(path)` — จัดการ fd lifecycle, partial read, error path ครบอยู่แล้ว คืน `[]byte` พร้อมใช้
 - **ทำ manual เมื่อ:** ต้องการ size check ก่อนโหลด (ป้องกัน OOM), หรือต้องการ error context เฉพาะทาง เช่น บอกว่า path มาจากไหน
 - **kata สอนว่า:** `os.ReadFile` ปลอดภัยเพราะ *ทำทุกอย่างที่คุณเพิ่งเขียน* — รู้แล้วใช้ได้อย่างมั่นใจ ไม่ใช่ magic
+
+### Rust-specific Production Notes
+
+- `fs::read(path)` และ `fs::read_to_string(path)` คือ one-liner ที่ปลอดภัยสำหรับ trusted path — handle fd lifecycle ครบ
+- ถ้า path มาจาก user input ต้องใช้ `OpenOptions` + `O_NOFOLLOW` — `fs::read` ไม่มี symlink protection
+- return `Vec<u8>` ไม่ใช่ `String` — การ convert เป็น UTF-8 เป็นหน้าที่ของ caller ที่รู้ format ของ config
+- `read_to_end` ดีกว่า `read_exact` กับ pre-allocated buffer เพราะ handle file resize ระหว่างอ่านได้ gracefully
+- `Result` จาก `read_to_end` ต้อง propagate ด้วย `?` เสมอ — `#[must_use]` จะเตือน แต่ compiler ไม่ error ถ้าไม่ใส่
