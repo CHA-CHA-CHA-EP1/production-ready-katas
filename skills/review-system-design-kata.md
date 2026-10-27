@@ -78,6 +78,34 @@ description: Review guide for system design kata submissions — reads diagram i
 - Kata spec ยังสมเหตุสมผลไหม หรือ constraints ขัดแย้งกันเอง?
 - มี acceptance criteria ที่ควรเพิ่มไหม จาก design ที่เห็น?
 
+### 9. Security
+
+- Secret / credential เก็บที่ไหน? อยู่ใน env var, code หรือ secret manager?
+- IAM permission ใช้ least privilege ไหม? มี wildcard action/resource ที่ไม่จำเป็น?
+- Network exposure: Security Group เปิดเฉพาะ port ที่จำเป็นไหม? ไม่มี SSH หรือ admin port จาก internet?
+- Data at rest: encryption กำหนดไว้ไหม? SSE-S3 vs SSE-KMS เหมาะกับ sensitivity level ของ data ไหม?
+- S3 bucket มี Block Public Access ไหม? ไม่มี public-read ACL บน sensitive data?
+- Audit trail: CloudTrail, access log, หรือ equivalent มีไหม?
+- ถ้า EC2/container ถูก compromise blast radius คืออะไร?
+
+### 10. Cost
+
+- Cost driver หลักคืออะไร (compute, data transfer, storage, request count)?
+- NAT Gateway มีค่า data transfer — traffic ที่ออก internet มีปริมาณเท่าไร?
+- ถ้า load เพิ่ม 10x cost เพิ่มกี่เท่า? linear หรือ exponential?
+- Log retention กำหนดไว้ไหม? log ที่เก็บนานเกินต้องการสร้าง cost ไหม?
+- มี cost alerting (AWS Budgets) ไหม?
+- Reserved Instance / Savings Plan เหมาะกับ baseline load ไหม?
+
+### 11. Governance / Compliance และ Data Classification
+
+- Data ที่ system handle มี classification ไหม (public / internal / confidential / restricted)?
+- Control ตาม data classification implement ไหม? (เช่น confidential data ต้องการ encryption + audit + restricted access)
+- Design สอดคล้องกับ organisation standards ไหม? (tagging, naming convention, approved services list)
+- ถ้ามี compliance scope (เช่น data residency, audit trail requirement) — design comply ไหม?
+- Exception จาก standard มี waiver approved ไหม?
+- Learner ระบุ compliance assumption ใน Key Decisions ไหม หรือ assume ว่า "no compliance requirement"?
+
 ---
 
 ## Output Format
@@ -97,6 +125,9 @@ description: Review guide for system design kata submissions — reads diagram i
 Must address before prod: [N] items
 Worth discussing: [N] items
 Kata spec suggestions: [yes / none]
+Security gaps: [N] items
+Cost risks: [N] items
+Governance / compliance gaps: [N] items
 ```
 
 **Legend:**
