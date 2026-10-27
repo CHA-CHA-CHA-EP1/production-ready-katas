@@ -52,7 +52,16 @@ production-ready-katas/
 │   │   ├── resilience-and-consistency/
 │   │   └── system-design/ # Architecture & system design katas
 │   └── scenarios/         # End-to-end exercises combining multiple katas
-├── skills/                # AI review skills (kata-review, system-design-review)
+├── architecture/          # Solution / Enterprise Architecture practice track
+│   ├── katas/             # Scenario problems (CIDR, account structure, DR, …)
+│   ├── governance/        # EA governance practice (ARB, tiered review, tech radar, …)
+│   ├── post-mortems/      # Incident reading exercises
+│   ├── review-bank/       # Designs with planted flaws + separate answer keys
+│   ├── checklists/        # Review checklist + questions for app teams
+│   ├── ROADMAP.md         # All topics with Level and Priority
+│   └── README.md
+├── templates/             # kata-template, key-decisions-template, adr-template
+├── skills/                # AI review skills
 ├── go/                    # Go implementations
 ├── rust/                  # Rust implementations
 └── zig/                   # Zig implementations
@@ -90,6 +99,22 @@ Katas are grouped by domain. Numbering within each group goes from naive baselin
 | `resilience-and-consistency` | Atomic writes, crash recovery, consistency guarantees |
 | `system-design` | Architecture katas — design distributed systems from real incidents |
 | `authentication` | Password hashing, JWT, OAuth2, MFA, WebAuthn/Passkeys |
+
+### Architecture track
+
+| Area | Description |
+|---|---|
+| `katas/01-cloud-foundation` | CIDR planning, account & OU structure, networking |
+| `katas/02-design-review` | Find the flaws in submitted designs |
+| `katas/03-resilience-dr` | DR strategies, RTO/RPO, multi-AZ |
+| `katas/04-security-iam` | IAM, secrets management, data classification |
+| `katas/05-observability-cost` | Metrics, alerting, cost drivers |
+| `katas/06-async-messaging` | SQS, DLQ, idempotency, retry patterns |
+| `katas/07-adr` | Architecture Decision Records and executive communication |
+| `katas/08-compliance-mapping` | Generic financial services controls (data residency, audit trail, DR testing) |
+| `governance/` | ARB process, tiered review, exceptions, tech radar, standards |
+| `review-bank/` | Case studies with planted flaws + answer keys |
+| `post-mortems/` | AWS S3 2017, Cloudflare 2019, Facebook 2021 |
 
 ### Cloud-storage provider note
 
@@ -200,7 +225,8 @@ The kata spec tells you what to build. `Explore First` tells you where to look. 
 |---|---|
 | [kata-review](skills/kata-review.md) | Review code implementation against kata spec |
 | [kata-challenge](skills/kata-challenge.md) | Spot-the-Bug challenge after kata review |
-| [review-system-design-kata](skills/review-system-design-kata.md) | Review system design diagram + decisions |
+| [review-system-design-kata](skills/review-system-design-kata.md) | Review system design diagram + decisions (11 dimensions incl. Security, Cost, Governance) |
+| [reviewer-mode](skills/reviewer-mode.md) | AI plays app team; user reviews the design; AI grades review then reveals answer key |
 
 ---
 
