@@ -50,6 +50,7 @@ production-ready-katas/
 │   │   ├── concurrency/
 │   │   ├── data-handling/
 │   │   ├── resilience-and-consistency/
+│   │   ├── digital-signature/ # Sign/verify, key storage, X.509 chain, multi-signer
 │   │   └── system-design/ # Architecture & system design katas
 │   └── scenarios/         # End-to-end exercises combining multiple katas
 ├── architecture/          # Solution / Enterprise Architecture practice track
@@ -99,6 +100,7 @@ Katas are grouped by domain. Numbering within each group goes from naive baselin
 | `resilience-and-consistency` | Atomic writes, crash recovery, consistency guarantees |
 | `system-design` | Architecture katas — design distributed systems from real incidents |
 | `authentication` | Password hashing, JWT, OAuth2, MFA, WebAuthn/Passkeys |
+| `digital-signature` | Hash vs sign, key pairs, PEM/X.509, multi-signer chain, key rotation |
 
 ### Architecture track
 
@@ -166,6 +168,8 @@ The kata spec tells you what to build. `Explore First` tells you where to look. 
 | [Upload Confirm Pattern](shared/assignment-specs/cloud-storage/12-upload-confirm-pattern.md) | 2 |
 | [Client-side Encrypt Upload](shared/assignment-specs/cloud-storage/22-client-side-encrypt-upload.md) | 2 |
 | [Stream Decrypt Download](shared/assignment-specs/cloud-storage/23-stream-decrypt-download.md) | 2 |
+| [Sign Then Upload](shared/assignment-specs/cloud-storage/24-sign-then-upload.md) | 2 |
+| [Verify Before Use (Download)](shared/assignment-specs/cloud-storage/25-verify-before-use-download.md) | 2 |
 
 #### cloud-storage (AWS only)
 | Kata | Difficulty |
@@ -179,6 +183,7 @@ The kata spec tells you what to build. `Explore First` tells you where to look. 
 | [S3 Object Lambda](shared/assignment-specs/cloud-storage/19-s3-object-lambda.md) | 3 |
 | [SSE-S3 vs SSE-KMS](shared/assignment-specs/cloud-storage/20-sse-s3-vs-sse-kms.md) | 1 |
 | [Envelope Encryption](shared/assignment-specs/cloud-storage/21-envelope-encryption.md) | 3 |
+| [KMS Asymmetric Signing](shared/assignment-specs/cloud-storage/26-kms-sign-api.md) | 3 |
 
 #### system-design
 | Kata | Difficulty |
@@ -204,6 +209,18 @@ The kata spec tells you what to build. `Explore First` tells you where to look. 
 | [PKCE Flow](shared/assignment-specs/authentication/14-pkce-flow.md) | 3 |
 | [WebAuthn / Passkeys](shared/assignment-specs/authentication/15-webauthn-passkeys.md) | 3 |
 
+#### digital-signature
+| Kata | Difficulty |
+|---|---|
+| [Checksum Is Not Authentication](shared/assignment-specs/digital-signature/01-checksum-is-not-authentication.md) | 1 |
+| [Sign and Verify Bytes](shared/assignment-specs/digital-signature/02-sign-and-verify-bytes.md) | 1 |
+| [Key Storage](shared/assignment-specs/digital-signature/03-key-storage.md) | 1 |
+| [Detached Signature (Streaming)](shared/assignment-specs/digital-signature/04-detached-signature-streaming.md) | 2 |
+| [Context Binding and Anti-Rollback](shared/assignment-specs/digital-signature/05-context-binding-anti-rollback.md) | 2 |
+| [Multi-Signer Chain](shared/assignment-specs/digital-signature/06-multi-signer-chain.md) | 3 |
+| [Key ID and Rotation](shared/assignment-specs/digital-signature/07-key-id-and-rotation.md) | 3 |
+| [Mini CA and X.509 Chain](shared/assignment-specs/digital-signature/08-mini-ca-x509-chain.md) | 3 |
+
 ### Concept docs available
 
 | Concept | Description |
@@ -218,6 +235,29 @@ The kata spec tells you what to build. `Explore First` tells you where to look. 
 | [mfa](shared/concepts/mfa.md) | TOTP algorithm, backup codes, MFA fatigue, SMS vs hardware key |
 | [oauth2](shared/concepts/oauth2.md) | OAuth2 flows, PKCE, state parameter, token types |
 | [webauthn](shared/concepts/webauthn.md) | Passkeys, public key crypto, phishing-resistance, sign counter |
+| [digital-signature](shared/concepts/digital-signature.md) | Hash vs sign vs encrypt, key pair roles, X.509/CA, multi-signer chain, PDF signing overview |
+
+### Scenarios available
+
+Scenarios combine multiple katas into an end-to-end problem. All patient/hospital data is synthetic.
+
+#### Hospital — digital signature track
+| Scenario | Difficulty | Prerequisite katas |
+|---|---|---|
+| [S1: Medical Certificate](shared/scenarios/S1-medical-certificate-single-signer.md) | 1 | 02, 04 |
+| [S2: Three-Tier Drug Approval](shared/scenarios/S2-three-tier-approval.md) | 2 | 05, 06, 07 |
+| [S3: Doctor Leaves — Key Revocation](shared/scenarios/S3-doctor-leaves-key-leaks.md) | 3 | 07, 08 |
+| [S4: Insurance Claim Packet via S3](shared/scenarios/S4-insurance-claim-packet.md) | 3 | 04, 05, 24, 25 |
+| [S5: Who Holds the Key? (System Design)](shared/scenarios/S5-who-holds-the-key.md) | 3 | 07, 08, 26 |
+
+### Suggested learning order — digital signature track
+
+> New to signing? Start here and go in order:
+>
+> 1. Read [`digital-signature.md`](shared/concepts/digital-signature.md)
+> 2. Katas: 01 → 02 → 03 → 04 → 05 → 06 → 07 → 08
+> 3. Cloud-storage katas: 24 → 25 → 26
+> 4. Scenarios: S1 → S2 → S3 → S4 → S5
 
 ### Skills (AI review guides)
 
@@ -233,6 +273,7 @@ The kata spec tells you what to build. `Explore First` tells you where to look. 
 ## Roadmap
 
 ### Near term
+- [ ] Go implementations for digital-signature katas 01-04 (`go/digital-signature/`)
 - [ ] Go implementations for cloud-storage katas (MinIO-based)
 - [ ] MinIO local setup guide (`go/cloud-storage/README.md`)
 - [ ] Kata: `02-streaming-read` — reading large files without loading into memory
